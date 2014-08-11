@@ -1,0 +1,230 @@
+#include <R.h>
+#include <Rinternals.h>
+
+
+/* int and double zeros are all bits off */
+#define ZEROINT(X,N,I) do{memset(INTEGER(X),0,N*sizeof(int));}while(0)
+#define ZERODBL(X,N,I) do{memset(REAL(X),0,N*sizeof(double));}while(0)
+
+
+/*
+## an R test
+x<-rnom(100);y<-rnom(100)
+xbins<-10;
+jmax <- floor(xbins + 1.5001)
+c1 <- 2 * floor((xbins)/sqrt(3) + 1.5001)
+imax <- trunc((jmax*c1 -1)/jmax + 1)
+dyn.load(hbin.so)
+.Call("hbin",x,y,NULL,1.0,xbins,range(x),range(y),as.integer(c(imax,jmax)),100L,FALSE,FALSE)
+*/
+
+SEXP hbin(SEXP x, SEXP y, SEXP swts, SEXP shape, SEXP rot,
+          SEXP size, SEXP rx, SEXP ry, SEXP bnd, SEXP n,
+	  SEXP doCellid, SEXP doTriangles){
+/*	Copyright 1991
+	Version Date:	September 16, 1994
+	Programmer:	Dan Carr, Conversion to C, triangulation,
+                        and Rapi Nicholas Lewin-Koh (2010-2014)
+	Indexing:	Left to right, bottom to top
+			bnd[0] rows, bnd[2] columns
+        Input Vars:
+	   x,y       the values of x and y
+           swts      a covariate or observation weights which will be
+	             summed over points in the bin 
+           shape     the shape parameter for the hexagons
+           rot       the angualr rotation of the grid (0,60)
+           size      the nuber of bins along the xaxis before rotation
+           rx, ry    the range of x and y variables (vector of length 2)
+           bnd
+           n         total number of points
+	   doCellid  a logical, true->the bin number and row number
+	             for the original point is returned (if n is big
+	             can defeat the point).
+           doTriangles a logical, true-> each hexagon is subdivided
+	             into 6 triangles during the binning step and
+	             points are counted in the triangles as well as 
+                     the hexagons. This ups the constant by 6, but the
+	             algorithm is still O(n). 
+
+
+	Output:
+                     cell ids for non empty cells, revised bnd(1)
+                     optionally also return cellid(1:n), wcnt, htcnt, htwcnt,
+      Copyright (2004) Nicholas Lewin-Koh and Martin Maechler */
+
+
+  int nc, nn;
+  int i, i1, i2, iinc;
+  int j1, j2, jinc;
+  int L, ll, lmax, lat, tcell;
+  double c1, c2, con1, con2, dist1, fsize, c3, c4;
+  double sx, sy, xmin, ymin, xr, yr, hcx, hcy, hci, hcj, vang;
+  unsigned int keepID=0, doWeights=0, doTris=0; 
+  int prcnt=0;
+  SEXP ans;
+  SEXP cnt, cell, wcnt,  htcnt,  htwcnt,  cellid,  xcm,  ycm;
+
+
+
+	if(LOGICAL(doCellid)[0]>0) keepID = 1;
+	if(LOGICAL(doTriangles)[0]>0) doTris = 1;
+	if(length(swts) > 0 || swts != R_NilValue) doWeights = 1;
+ 
+        /*_______Alloc and protect the necessary result vectors, then set to 0_____________*/
+        lmax=INTEGER(bnd)[0]*INTEGER(bnd)[1];
+
+	PROTECT(cnt = allocVector(INTSXP, lmax));
+        prcnt++;
+	PROTECT(cell = allocVector(INTSXP, lmax));
+        prcnt++;
+	PROTECT(xcm = allocVector(REALSXP, lmax));
+        prcnt++;
+	PROTECT(ycm = allocVector(REALSXP, lmax));
+        prcnt++;
+	if(keepID > 0) PROTECT(cellid = allocVector(INTSXP, INTEGER(n)[0]));
+	else PROTECT(cellid = allocVector(NILSXP, 1));
+	prcnt++;
+
+	if(doWeights > 0)PROTECT(wcnt = allocVector(REALSXP, lmax));
+	else PROTECT(wcnt = allocVector(NILSXP, 1));
+	prcnt++;
+
+	if(INTEGER(doTriangles)[0]>0){
+	  PROTECT(htcnt = allocVector(INTSXP, lmax*6));
+	  prcnt++;
+	  if(doWeights>0)PROTECT(htwcnt = allocVector(REALSXP, lmax*6));
+	  else PROTECT(htwcnt = allocVector(NILSXP, 1));
+	  prcnt++;
+	}
+	else{
+	  PROTECT(htcnt = allocVector(NILSXP, 1));
+	  PROTECT(htwcnt = allocVector(NILSXP, 1));
+	  prcnt=prcnt+2;
+	}
+
+	memset(INTEGER(cell),0,lmax*sizeof(int));
+	memset(INTEGER(cnt),0,lmax*sizeof(int));
+        memset(REAL(xcm),0,lmax*sizeof(double));
+        memset(REAL(ycm),0,lmax*sizeof(double));
+	if(doWeights>0) memset(REAL(wcnt),0,lmax*sizeof(double));
+	if(INTEGER(doTriangles)[0]>0){
+	  memset(INTEGER(htcnt),0,6*lmax*sizeof(int));
+	  if(doWeights>0) memset(REAL(htwcnt),0,6*lmax*sizeof(double));
+	}
+
+       /*_______Constants for scaling the data_____________________________*/
+	fsize=REAL(size)[0];
+        nn=INTEGER(n)[0];
+	xmin = REAL(rx)[0];
+	ymin = REAL(ry)[0];
+	xr = REAL(rx)[1]-xmin;
+	yr = REAL(ry)[1]-ymin;
+
+	c1 = fsize/xr;
+	c2 = (fsize*REAL(shape)[0])/(yr*sqrt(3.0));
+	c3 = 1/c1;
+        c4 = (yr*sqrt(3.0))/(2*fsize*REAL(shape)[0]);
+
+	jinc= INTEGER(bnd)[1];
+	lat=jinc+1;
+	iinc= 2*jinc;
+	con1 = 0.25;
+	con2 = 1.0/3.0;
+
+	/*_______Binning loop______________________________________________*/
+
+	for(i=0; i<nn; i++){
+	  sx = c1 * (REAL(x)[i] - xmin);
+	  sy = c2 * (REAL(y)[i] - ymin);
+          /* Do I need to round or truncate?*/
+	  j1 = sx+.5;
+	  i1 = sy+.5;
+	  dist1 = (sx-j1)*(sx-j1)+ 3.0*(sy-i1)*(sy-i1);
+	  /* need floor in C for this, same effect as trunc*/
+	  if(dist1 < con1) L = i1*iinc + j1 + 1;
+	  else if(dist1 > con2) L = floor(sy)*iinc + floor(sx) + lat;
+	  else{
+	    j2 = sx;
+	    i2 = sy;
+	    if(dist1 <= ((sx - j2 - 0.5)*(sx - j2 - 0.5)) + 3.0*((sy - i2 - 0.5)*(sy - i2 - 0.5))) L = i1*iinc + j1 + 1;
+	    else L=i2*iinc+ j2+lat;
+	  }
+	  ll=L-1;
+          
+	  INTEGER(cnt)[ll]++; /* increment hexagon counter */
+	  if(doWeights > 0) REAL(wcnt)[ll] = REAL(wcnt)[ll] + REAL(swts)[i];
+	  if (keepID > 0) INTEGER(cellid)[i] = L;
+	  REAL(xcm)[ll] = REAL(xcm)[ll] + (REAL(x)[i]-REAL(xcm)[ll])/INTEGER(cnt)[ll];
+	  REAL(ycm)[ll] = REAL(ycm)[ll]+ (REAL(y)[i]-REAL(ycm)[ll])/INTEGER(cnt)[ll];
+	  if(INTEGER(doTriangles)[0]>0){
+	    /* Triangles are numbered counter clockwise, starting from
+	     * the middle right. We assume that no rotation is applied
+             * when numbering, but rotation is applied before binning, 
+	     * when rotation added to code
+             */
+	    hci=floor(ll/jinc);
+	    hcj=fmod(ll,jinc);
+	    hcy=c4 * hci + ymin;
+	    if(fmod(hci,2.0)!=0) hcx=c3*(hcj + 0.5) + xmin;
+            else hcx=c3*hcj + xmin;
+	    sx = REAL(x)[i] - hcy;
+	    sy = REAL(y)[i] - hcy;
+	    vang = atan2 (sy,sx) * 180.0 / PI;
+	    if(REAL(y)[i]-hcy > 0.0) {
+	      if(vang <=30.0) INTEGER(htcnt)[6*ll]=INTEGER(htcnt)[6*ll]++;
+	      else if(vang > 30.0 & vang <= 90.0) INTEGER(htcnt)[6*ll+1]++; /*=INTEGER(cnt)[6*ll+1]++;*/
+	      else if(vang > 90.0 & vang <= 150.0) INTEGER(htcnt)[6*ll+2]++;/*=INTEGER(cnt)[6*ll+2]++;*/
+	      else INTEGER(htcnt)[6*ll]=INTEGER(htcnt)[6*ll+3]++;
+	    }
+	    else{
+	      if(vang<=210.0 ) INTEGER(htcnt)[6*ll]=INTEGER(cnt)[6*ll+3]++;
+	      else if(vang > 210.0 & vang <= 270.0) INTEGER(htcnt)[6*ll+4]++; /*=INTEGER(cnt)[6*ll+4]++;*/
+	      else if(vang > 270.0& vang <= 330) INTEGER(htcnt)[6*ll+5]++; /*=INTEGER(cnt)[6*ll+5]++;*/
+	      else INTEGER(htcnt)[6*ll]=INTEGER(htcnt)[6*ll]++;
+	    }
+	}
+
+/*_______Compression of output________________________________________*/
+
+        nc=-1;
+        for(L=0;L<lmax;L++){
+	    if(INTEGER(cnt)[L] > 0){
+		nc=nc+1;
+		INTEGER(cell)[nc]=L+1;
+		INTEGER(cnt)[nc]=INTEGER(cnt)[L];
+		REAL(xcm)[nc]=REAL(xcm)[L];
+		REAL(ycm)[nc]=REAL(ycm)[L];
+		if(doWeights > 0) REAL(wcnt)[nc]=REAL(wcnt)[L];		
+		if(INTEGER(doTriangles)[0]>0){
+		    for(i=0; i<6; i++) INTEGER(htcnt)[nc*6 + i] = INTEGER(htcnt)[6*L+i];
+		}	    
+	    }
+	}
+
+       INTEGER(n)[0]=nc+1;
+       INTEGER(bnd)[0]=(INTEGER(cell)[nc]-1)/INTEGER(bnd)[1]+1;
+       /* Output constructor */
+       PROTECT(ans = allocVector(VECSXP, 8));
+       prcnt++;
+
+       if(doWeights > 0 & INTEGER(doTriangles)[0]>0){
+	   SET_VECTOR_ELT(ans, 5, wcnt);
+	   SET_VECTOR_ELT(ans, 6, htcnt);
+	   SET_VECTOR_ELT(ans, 7, htwcnt);
+       }
+       else if(INTEGER(doTriangles)[0]>0 & doWeights <= 0){
+	  SET_VECTOR_ELT(ans, 6, htcnt);	   
+       }
+       else if(INTEGER(doTriangles)[0]<=0 & doWeights > 0){
+	 SET_VECTOR_ELT(ans, 5, wcnt);  
+       }
+           
+       SET_VECTOR_ELT(ans, 0, n);
+       SET_VECTOR_ELT(ans, 1, cell);
+       SET_VECTOR_ELT(ans, 2, cnt);
+       SET_VECTOR_ELT(ans, 3, xcm);
+       SET_VECTOR_ELT(ans, 4, ycm);
+
+       UNPROTECT(prcnt);
+       return(ans);
+}

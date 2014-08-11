@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/bioconductor/!svn/ver/41134/trunk/madman/Rpacks/hexbin/R
+END
+hdiffplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/31869/trunk/madman/Rpacks/hexbin/R/hdiffplot.R
+END
+hexutil.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/31869/trunk/madman/Rpacks/hexbin/R/hexutil.R
+END
+hexViewport.R
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/R/hexViewport.R
+END
+grid.hexlegend.R
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/R/grid.hexlegend.R
+END
+BTY.R
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/BTY.R
+END
+LOCS.R
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/LOCS.R
+END
+grid.hexagons.R
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bioconductor/!svn/ver/41134/trunk/madman/Rpacks/hexbin/R/grid.hexagons.R
+END
+hbox.R
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bioconductor/!svn/ver/13350/trunk/madman/Rpacks/hexbin/R/hbox.R
+END
+hexPlotMA.R
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/R/hexPlotMA.R
+END
+hexbin.s4.R
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/41134/trunk/madman/Rpacks/hexbin/R/hexbin.s4.R
+END
+RB.R
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/RB.R
+END
+hexpanel.R
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/R/hexpanel.R
+END
+MAG.R
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/MAG.R
+END
+LINGRAY.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/LINGRAY.R
+END
+HO.R
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/HO.R
+END
+smoothHexbin.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/11368/trunk/madman/Rpacks/hexbin/R/smoothHexbin.R
+END
+BTC.R
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bioconductor/!svn/ver/11725/trunk/madman/Rpacks/hexbin/R/BTC.R
+END
+hexbinList.R
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/R/hexbinList.R
+END
+hexbinplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/bioconductor/!svn/ver/31869/trunk/madman/Rpacks/hexbin/R/hexbinplot.R
+END
+hexplom.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/31869/trunk/madman/Rpacks/hexbin/R/hexplom.R
+END

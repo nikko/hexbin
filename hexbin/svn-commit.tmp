@@ -1,0 +1,8 @@
+Bug fixes documented in Changelog
+--This line, and those below, will be ignored--
+
+M    DESCRIPTION
+M    ChangeLog
+M    R/grid.hexagons.R
+M    R/hexbin.s4.R
+M    man/hexVP-class.Rd

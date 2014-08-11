@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+RL=/usr/local/app/R/Bioconductor/library:/usr/local64.sfs/app/R/R_local/library
+R=R
+R=R-devel
+#
+dPKG=`dirname $0`
+if [ x$dPKG = x. ] ; then dPKG=`pwd`; fi
+PKG=`basename $dPKG`;echo "dPKG= «$dPKG», Package «$PKG» .."
+#
+cd $dPKG/..
+R_LIBS=${RL} $R CMD check $@ $PKG

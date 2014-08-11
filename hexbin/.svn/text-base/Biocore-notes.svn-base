@@ -1,0 +1,143 @@
+These are Notes about things I did to Nicolas' version (of 2002-04),
+primarily aimed at fellow BioCorers.
+Hence this file is in ./.Rbuildignore and therefore won't be exposed in the
+distro.
+					Martin Maechler, Aug.15-20, 2002
+
+Working on ./hexbin.R
+---------------------
+ - several functions share ``cut&paste identical code''
+   ==> fix this eventually {via private functions once we have namespaces}
+
+ - add PACKAGE = "hexbin" to .Fortran() calls
+
+ - Many places have  return("<error message").
+   Changed most to stop("....") and a few to  warning("....")
+
+
+CVS add new things:
+------------------
+
+\rm -f TITLE ; cvs delete TITLE ; cvs commit -m'deprecated' TITLE
+
+cvs add Biocore-notes
+cvs add .Rbuildignore
+
+cvs add data
+(cd data ; cvs add NHANES.rda)
+(cd man; ; cvs add NHANES.Rd)
+cvs commit -m'data set newly added' data/NHANES.rda man/NHANES.Rd
+
+cvs add tests
+(cd tests ; for f in *.R *.Rout.save ; do cvs add $f ; done)
+cvs commit -m'tests -- originally from bin2d/tests' *.R *.Rout.save
+
+
+-------
+
+In tests/large.R , the main thing was calling hplot() on
+    ans.25mil
+which should probably be a large data set.
+No idea where I could find that.
+Ask Dan Carr ?
+
+--------------------
+
+Running tests/hdiffplot.R   gives warnings about "gamma setting"
+There must be something ``wrong by design'' there
+
+--------------------
+
+Missing functionality originally in Dan Carr's code ?
+
+  ../bin2d/man/hthin.Rd --> documents  hthin()
+
+which currently is also mentioned in several man/*.Rd pages here.
+but there's no S/R code for hthin() in ./R/ at all
+nor any in ./src/
+
+---
+
+Should capitalize (and abbreviate!) the \title{}s some time ...
+
+Done:
+    o	no single precision anymore
+
+--------------------------------------------------------------------------------
+
+S-plus has a version of the code from Dan Carr;
+we try to use their naming scheme **apart** from the class/methods,
+where we want S4 classes, not S3 ones :
+
+ S-plus name	 bin2d orig.(D.Carr)	 Hexbin pkg name
+ -----------	 ---------------	 -----
+ hexbin		 hbin			 hexbin
+ hexagons	 = hexagons		 hexagons
+ hex.legend	 hlegend
+
+    erode.hexbin herode
+ identify.hexbin  __NA__
+     plot.hexbin hplot
+   smooth.hexbin hsm
+  summary.hexbin  __NA__
+
+      _NA_	 hboxplot
+      _NA_	 hdiffplot
+
+
+ Note that where Dan Carr's  "bin2d" had the5 hexagon styles with short
+ names, S-plus has longer names __which we adopt as well__ :
+
+ S-plus name	 bin2d (D.Carr)
+ -----------	 --------------
+ grayscale	   g
+ centroids	   cm
+ lattice	   lat
+ nested.lattice	   nest
+ nested.centroids  nestcm
+
+--------------------------------------------------------------------------------
+
+ ==========
+ References
+ ==========
+
+  man/colramp.Rd:
+
+    Haim Levkowitz (1997)
+    \emph{Color Theory and Modeling for Computer Graphics,
+      Visualization, and Multimedia Applications}.
+    Kluwer Academic Publishers, Boston/London/Dordrecht.
+    \url{http://www.cs.uml.edu/~haim/ColorCenter/}
+
+  man/hexbin.Rd:
+
+    Carr, D. B. et al. (1987)
+    "Scatterplot Matrix Techniques for Large N",
+    \emph{JASA} \bold{83}, 398, 424--436.
+
+  man/hcell.Rd:
+
+   Carr, D. B., A. R. Olsen, and D. White  (1992)
+  "Hexagon Mosaic Maps for Display of Univariate and Bivariate
+   Geographical Data."  \emph{Cartography and Geographic Information
+   Systems}, Vol. 19 No. 4, pp. 228-236, 271
+
+  man/hexagons.Rd:
+
+    Carr, D. B. (1991)
+    Looking at Large Data Sets Using Binned Data Plots,
+    pp. 7--39 in \emph{Computing and Graphics in Statistics};
+    Eds. A. Buja and P. Tukey, Springer-Verlag, New York.
+
+  man/hboxplot.Rd  	--> hexagons
+
+  man/hcell2xy.Rd  	--> hcell
+  man/hdiffplot.Rd  	--> hexagons
+
+  man/hex.legend.Rd	--> hexagons
+  man/hmatplot.Rd	--> hexagons
+  man/hplot.Rd		--> hexagons
+  man/hray.Rd		--> hcell
+  man/smooth.hexbin.Rd		--> hexagons
+  man/NHANES.Rd	 (__missing__)

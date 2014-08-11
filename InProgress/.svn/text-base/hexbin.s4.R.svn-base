@@ -1,0 +1,139 @@
+require(methods)
+.initClasses <- function(where){
+  setClass("hexbin",
+           representation(cell="integer", count="integer",
+                          xcm="numeric", ycm="numeric", xbins="numeric",
+                          shape= "numeric", xbnds = "numeric",
+                          ybnds ="numeric", dimen = "numeric",
+                          n =  "integer"),
+           where=where
+           )
+
+  setClass("erodebin",
+           representation("hexbin", eroded="logical", cdfcut="numeric",
+                          erode="integer"),
+           where=where
+           ) 
+}
+hexbin <-
+    function(x, y, xbins = 30, shape = 1, xbnds = range(x), ybnds = range(y))
+{
+    call<-match.call()
+    n <- length(x)
+    if(length(y) != n)
+        stop("Vector length mismatch")
+    if(diff(xbnds) == 0)
+        stop("x range must be positive")
+    if(diff(ybnds) == 0)
+        stop("y range must be positive")
+    jmax <- floor(xbins + 1.5001)
+    imax <- 2 * floor((xbins * shape)/sqrt(3) + 1.5001)
+    dim <- c(imax, jmax)
+    lmax <- jmax * imax
+    ans <- .Fortran("hbin",
+                    x = as.double(x),
+                    y = as.double(y),
+                    cell= integer(lmax),
+                    cnt = integer(lmax),
+                    xcm = double(lmax),
+                    ycm = double(lmax),
+                    xbins = as.double(xbins),
+                    shape = as.double(shape),
+                    xbnds = as.double(xbnds),
+                    ybnds = as.double(ybnds),
+                    dim = as.integer(dim),
+                    n = as.integer(n),
+                    PACKAGE = "hexbin")[-(1:2)]
+    ## delele data and extraneous stuff
+    if(sum(ans$cnt) != n) warning("Lost counts in binning")
+    nc <- ans$n
+    length(ans$cell) <- nc
+    length(ans$cnt) <- nc
+    length(ans$xcm) <- nc
+    length(ans$ycm) <- nc
+    hb <- new("hexbin",cell=ans$cell,count=ans$cnt,
+                      xcm=ans$xcm, ycm=ans$ycm, xbins=ans$xbins,
+                      shape= ans$shape, xbnds = ans$xbnds ,
+                      ybnds = ans$ybnds , dimen = ans$dim,
+                      n = ans$n) 
+    attr(ans, "call") <- call
+    ##class(ans) <- "hexbin"/
+    ##ans
+    hb
+}## hexbin
+
+
+                  
+
+
+
+#}
+#setIs("hexbin", function(hbin) class(hbin)=="hexbin")
+
+
+
+setGeneric("hcell2xy", function(hbin) standardGeneric("hcell2xy"))
+setMethod("hcell2xy", "hexbin", function(hbin)
+{
+    xbins <- hbin@xbins
+    xbnds <- hbin@xbnds
+    c3 <- diff(xbnds)/xbins
+    ybnds <- hbin@ybnds
+    c4 <- (diff(ybnds) * sqrt(3))/(2 * hbin@shape * xbins)
+    jmax <- hbin@dimen[2]
+    cell <- hbin@cell - 1
+    i <- cell %/% jmax
+    j <- cell %% jmax
+    y <- c4 * i + ybnds[1]
+    x <- c3 * ifelse(i %% 2 == 0, j, j + 0.5) + xbnds[1]
+    list(x = x, y = y)
+})
+
+setClass("erodebin",
+         representation("hexbin", eroded="logical", cdfcut="numeric",
+                        erode="integer")
+           )
+
+setGeneric("erode", function(hbin,cdfcut = 0.5) standardGeneric("erode"))
+
+setMethod("erode", "hexbin", function(hbin, cdfcut = 0.5)
+{
+    if(!inherits(hbin,"hexbin")) stop("first argument must be a hexbin object")
+    #bin.att <- attributes(hbin)
+    cell <- hbin@cell
+    cnt <- hbin@count
+    tmp <- sort(cnt)
+    cdf <- cumsum(tmp)/sum(cnt)
+    good <- cdfcut <= cdf
+    if(!any(good))
+        return("no cells selected")
+    crit <- min(tmp[good])
+    good <- crit <= cnt
+    cell <- cell[good]
+    cnt <- cnt[good]
+    #hbin@cell <- cell
+    #hbin@count <- cnt
+    n <- length(cell)
+    bdim <- hbin@dimen
+    L <- bdim[1] * bdim[2]
+    ans <- .Fortran("herode",
+                    cell  = as.integer(cell),
+                    cnt   = as.integer(cnt),
+                    n     = n,
+                    bdim  = as.integer(bdim),
+                    erode = integer(L),
+                    ncnt  = integer(L),
+                    ncell = integer(L),
+                    sides = integer(L),
+                    neib  = integer(6 * L),
+                    exist = logical(L + 1),
+                    PACKAGE = "hexbin") $ erode
+    length(ans) <- n
+    ehbin <- new("erodebin", hbin, cdfcut=cdfcut, eroded=good, erode=ans)
+    #hbin@erode <- ans
+    #class(hbin) <- c(class(hbin),"erodebin")
+    ehbin
+  }
+)
+
+

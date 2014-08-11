@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/bioconductor/!svn/ver/42686/trunk/madman/Rpacks/hexbin
+END
+DESCRIPTION
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/42686/trunk/madman/Rpacks/hexbin/DESCRIPTION
+END
+.Rbuildignore
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/12146/trunk/madman/Rpacks/hexbin/.Rbuildignore
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/bioconductor/!svn/ver/20219/trunk/madman/Rpacks/hexbin/TODO
+END
+was-R_zzz.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/11366/trunk/madman/Rpacks/hexbin/was-R_zzz.R
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bioconductor/!svn/ver/41134/trunk/madman/Rpacks/hexbin/ChangeLog
+END
+Biocore-notes
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/14596/trunk/madman/Rpacks/hexbin/Biocore-notes
+END
+0-check-me
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/bioconductor/!svn/ver/11353/trunk/madman/Rpacks/hexbin/0-check-me
+END
+README-R
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bioconductor/!svn/ver/20280/trunk/madman/Rpacks/hexbin/README-R
+END
+NAMESPACE
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bioconductor/!svn/ver/31869/trunk/madman/Rpacks/hexbin/NAMESPACE
+END

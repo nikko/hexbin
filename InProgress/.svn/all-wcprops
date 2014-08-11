@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress
+END
+xy.hexplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/bioconductor/!svn/ver/9539/trunk/madman/Rpacks/hexbin/InProgress/xy.hexplot.R
+END
+hexutil.R
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress/hexutil.R
+END
+hexplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/bioconductor/!svn/ver/9539/trunk/madman/Rpacks/hexbin/InProgress/hexplot.R
+END
+new.zzz.R
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/bioconductor/!svn/ver/10112/trunk/madman/Rpacks/hexbin/InProgress/new.zzz.R
+END
+grid.hexlegend.R
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress/grid.hexlegend.R
+END
+hmatplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress/hmatplot.R
+END
+plotMA.R
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress/plotMA.R
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/9539/trunk/madman/Rpacks/hexbin/InProgress/README
+END
+coplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/bioconductor/!svn/ver/9539/trunk/madman/Rpacks/hexbin/InProgress/coplot.R
+END
+grid.hexagons.R
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress/grid.hexagons.R
+END
+hexbin.s4.R
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/bioconductor/!svn/ver/10112/trunk/madman/Rpacks/hexbin/InProgress/hexbin.s4.R
+END
+list2hexList.Rd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bioconductor/!svn/ver/11799/trunk/madman/Rpacks/hexbin/InProgress/list2hexList.Rd
+END
+Grid-hexplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/bioconductor/!svn/ver/10112/trunk/madman/Rpacks/hexbin/InProgress/Grid-hexplot.R
+END
+grayhex.s
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/bioconductor/!svn/ver/9539/trunk/madman/Rpacks/hexbin/InProgress/grayhex.s
+END
+experimental.hdiff.R
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/bioconductor/!svn/ver/11342/trunk/madman/Rpacks/hexbin/InProgress/experimental.hdiff.R
+END
+interp.hexbin.R
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bioconductor/!svn/ver/30483/trunk/madman/Rpacks/hexbin/InProgress/interp.hexbin.R
+END

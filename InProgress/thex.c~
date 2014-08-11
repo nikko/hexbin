@@ -1,0 +1,42 @@
+#include <R.h>
+#include <Rinternals.h>
+
+SEXP thex(SEXP x, SEXP y, SEXP wts, SEXP hbin, SEXP xhc, SEXP yhc){
+  
+  
+  int n;
+  SEXP htcnt,  htwcnt;
+
+  if(INTEGER(doTriangles)[0]>0){
+    PROTECT(htcnt = allocVector(INTSXP, lmax*6));
+    PROTECT(yhc = allocVector(REALSXP, lmax));
+    PROTECT(xhc = allocVector(REALSXP, lmax));
+    prcnt=prcnt+3;
+    if(doWeights>0)PROTECT(htwcnt = allocVector(REALSXP, lmax*6));
+    else PROTECT(htwcnt = allocVector(NILSXP, 1));
+    prcnt++;	 
+  }
+  else{
+    PROTECT(htcnt = allocVector(NILSXP, 1));
+    PROTECT(htwcnt = allocVector(NILSXP, 1));
+    prcnt=prcnt+2;
+  }
+  if(INTEGER(doTriangles)[0]>0){
+    memset(INTEGER(htcnt),0,6*lmax*sizeof(int));
+    memset(REAL(xhc),0,lmax*sizeof(double));
+    hcx=REAL(xhc);
+    memset(REAL(xhc),0,lmax*sizeof(double));
+    hcy=REAL(yhc);
+    if(doWeights>0) memset(REAL(htwcnt),0,6*lmax*sizeof(double));
+  }
+if(INTEGER(doTriangles)[0]>0){
+	    hci=floor(ll/jinc);
+	    hcj=fmod(ll,jinc);
+	    hcy=c4 * hci + ymin;
+	    if(fmod(hci,2.0)!=0) hcx=c3*(hcj + 0.5) + xmin;
+            else hcx=c3*hcj + xmin;
+	    if(REAL(x)[i]>hcx) tcell = 3;
+	    
+	  }	
+
+}

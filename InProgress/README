@@ -1,0 +1,23 @@
+Main ideas:
+
+1) "port to grid" (partially done, not ok)
+2) "move to S4 classes"
+3) lattice like function
+
+
+FILE		    CONTENT
+----------------    ------------------------------------------------
+
+./hexplot.R	  : plot.hexbin() using grid
+./grid.hexagons.R : grid.hexagons() replacing hexagons() using grid;
+
+./Grid-hexplot.R  : idea of a gplot.hexbin()
+		    ``such that plot can be resized AND hexagons keep shape''
+
+		    --> i.e. "aspect ratio == fixed"
+		        since hexagons correspond to original x-/y- scale
+			and its hbinning.
+
+./xy.hexplot.R	  : try lattice using "xyplot" alike
+
+./hmatplot.R	  : make hmatplot() generic with a default and formula method

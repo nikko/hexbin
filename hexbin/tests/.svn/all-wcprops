@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/bioconductor/!svn/ver/31378/trunk/madman/Rpacks/hexbin/tests
+END
+hdiffplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bioconductor/!svn/ver/17286/trunk/madman/Rpacks/hexbin/tests/hdiffplot.R
+END
+hray.R
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/bioconductor/!svn/ver/10234/trunk/madman/Rpacks/hexbin/tests/hray.R
+END
+hdiffplot.Rout.save
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/bioconductor/!svn/ver/31378/trunk/madman/Rpacks/hexbin/tests/hdiffplot.Rout.save
+END
+viewp-ex.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/11353/trunk/madman/Rpacks/hexbin/tests/viewp-ex.R
+END
+large.R
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/bioconductor/!svn/ver/1577/trunk/madman/Rpacks/hexbin/tests/large.R
+END
